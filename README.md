@@ -4,6 +4,8 @@ This is package provides a minimal example for the iled modeling approach.
 
 ## Installation
 
+The package can be installed through the following command:
+
 ```
 pip3 install -U .
 ```
