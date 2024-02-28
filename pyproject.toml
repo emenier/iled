@@ -1,0 +1,26 @@
+[project]
+
+name = "iled"
+version = "1.0.0"
+
+authors = [
+  { name="Emmanuel Menier", email="emmanuel.menier@inria.fr" },
+]
+
+readme = "README.md"
+
+dependencies = [
+    "h5py",
+    "torch",
+    "numpy",
+    "matplotlib",
+    "tqdm"
+]
+
+requires-python = ">=3.8"
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+
