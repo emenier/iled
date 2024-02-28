@@ -1,4 +1,5 @@
 import argparse
+import os
 import os.path as osp
 from torch.utils.data import DataLoader
 import sys
@@ -9,17 +10,20 @@ import iled
 parser = argparse.ArgumentParser(
         description="Train an iLED model on the FHN case",
     )
-parser.add_argument("--dir", type=str, 
+parser.add_argument("--work_dir", type=str, 
                         help="Path to the work directory where data and runs will be saved")
 parser.add_argument("--run_name", type=str, help="Name of the training run")
 args = parser.parse_args()
+
 
 seed = 1337
 np.random.seed(seed)
 torch.manual_seed(seed)
 
-work_dir = args.dir
+work_dir = args.work_dir
 save_dir = args.run_name
+if not osp.exists(osp.join(work_dir,'runs')):
+    os.mkdir(osp.join(work_dir,'runs'))
 
 train_dataset = iled.data_utils.FHNDataset(osp.join(work_dir, "data"), "train")
 val_dataset = iled.data_utils.FHNDataset(osp.join(work_dir, "data"), "val")

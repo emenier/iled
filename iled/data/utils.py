@@ -1,4 +1,5 @@
 import h5py
+import os
 import os.path as osp
 import torch
 import numpy as np
@@ -65,6 +66,8 @@ class FHNDataset(HDF5Dataset):
         super().__init__(path,split,*args, **kwargs)
 
     def download(self,path):
+        if not osp.exists(path):
+            os.mkdir(path)
 
         file_name = 'fhn_compressed'
         url = 'https://zenodo.org/records/7813903/files/FHN_data.zip?download=1'
@@ -74,3 +77,5 @@ class FHNDataset(HDF5Dataset):
         print("Extracting " + file_name + ".zip at " + path + "...")
         with zipfile.ZipFile(osp.join(path, file_name + '.zip'), 'r') as zipf:
             zipf.extractall(path)
+
+        os.remove(osp.join(path, file_name + '.zip'))
