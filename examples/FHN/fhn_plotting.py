@@ -1,9 +1,9 @@
 import torch
 import torch.nn as nn
 import numpy as np
-import sys
-
-sys.path.append("../../")
+import argparse
+import os
+import os.path as osp
 import iled
 import matplotlib
 import matplotlib.pyplot as plt
@@ -48,7 +48,7 @@ def colorbar_ticks(cbar, field, n_ticks=4, form="float"):
         cbar.set_ticklabels(["{:.0e}".format(m) for m in labels])
 
 
-def prediction_plot(traj, trainer, Tvis=None, Tf=None, autoencoder=False, save_path = None, name='default'):
+def prediction_plot(traj, trainer, Tvis=None, Tf=None, autoencoder=False, save_path = None):
 
     if Tvis is None:
         Tvis = trainer.config.target_length
@@ -76,7 +76,7 @@ def prediction_plot(traj, trainer, Tvis=None, Tf=None, autoencoder=False, save_p
 
     matplotlib.rcParams.update({"font.size": 10})
     fig = plt.figure(figsize=(16, 6), constrained_layout=True)
-    gs = gridspec.GridSpec(3, 11, hspace=0.25, wspace=0)
+    gs = gridspec.GridSpec(3, 11, hspace=0.05, wspace=0,figure=fig)
 
     
 
@@ -126,7 +126,7 @@ def prediction_plot(traj, trainer, Tvis=None, Tf=None, autoencoder=False, save_p
     plt.yticks([])
 
     if save_path:
-        fig.savefig(osp.join(save_path,name,'_trajectory.png'),dpi=300,bbox_inches='tight')
+        fig.savefig(osp.join(save_path,'prediction.png'),dpi=200,bbox_inches='tight')
     else:
         plt.show()
 
@@ -136,20 +136,24 @@ def prediction_plot(traj, trainer, Tvis=None, Tf=None, autoencoder=False, save_p
     linear_norm = np.linalg.norm(linear_part,axis=-1)
     nl_norm = np.linalg.norm(nl_part,axis=-1)
 
-    print(linear_norm.mean(),nl_norm.mean())
-
     fig2 = plt.figure(figsize=(16, 2))
-    plt.semilogy(linear_norm,lw=3,label='linear part')
-    plt.semilogy(nl_norm,lw=3,label='Non-linear part')
+    plt.semilogy(linear_norm[:Tvis],lw=3,label='linear part')
+    plt.semilogy(nl_norm[:Tvis],lw=3,label='Non-linear part')
+    plt.xlabel('Time (s)')
     plt.legend()
-    plt.show()
+    plt.title('Norm of the dynamics')
+
+    if save_path:
+        fig2.savefig(osp.join(save_path,'dynamics_norm.png'),dpi=200,bbox_inches='tight')
+    else:
+        plt.show()
 
 
 def autoencoder_plot(traj,trainer, Tvis=None, Tf=None):
     prediction_plot(traj,trainer,Tvis=Tvis,Tf=Tf,autoencoder=True)
 
 
-def encoded_plot(traj, trainer, Tvis=None, Tf=None, save_path = None):
+def encoded_plot(traj, trainer, Tvis=None, Tf=None, save_path = None, ticks=False):
 
     if Tvis is None:
         Tvis = trainer.config.target_length
@@ -167,7 +171,7 @@ def encoded_plot(traj, trainer, Tvis=None, Tf=None, save_path = None):
 
     matplotlib.rcParams.update({"font.size": 10})
     fig = plt.figure(figsize=(16, 4), constrained_layout=True)
-    gs = gridspec.GridSpec(2, 11, hspace=0.25, wspace=0.5)
+    gs = gridspec.GridSpec(2, 11, hspace=0.05, wspace=0.5,figure=fig)
 
     w_1 = 8
     pad = 0.01
@@ -193,6 +197,64 @@ def encoded_plot(traj, trainer, Tvis=None, Tf=None, save_path = None):
     plt.title(r"Latent space trajectory")
     plt.scatter(true_latents[:, 0], true_latents[:, 1], s=6, label="Truth")
     plt.xlabel(r"$z_1$")
-    #plt.xticks([])
     plt.ylabel(r"$z_2$")
-    #plt.yticks([])
+    if not ticks:
+        plt.xticks([])
+        plt.yticks([])
+
+    if save_path:
+        fig.savefig(osp.join(save_path,'encoded_traj.png'),dpi=200,bbox_inches='tight')
+    else:
+        plt.show()
+
+if __name__ == "__main__":
+    seed = 1337
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
+    parser = argparse.ArgumentParser(
+        description="Plot the results of a given iled model",
+    )
+    parser.add_argument("--dir", type=str, 
+                            help="Path to the work directory where data and runs will be saved")
+    parser.add_argument("--run_name", type=str, help="Name of the training run")
+    parser.add_argument("--output_dir", type=str, default = './output/',
+                            help="Directory in which figures are saved")
+    args = parser.parse_args()
+
+    work_dir = args.dir
+    run_name = args.run_name
+    output_dir = args.output_dir
+
+    print('Loading Model')
+    config = torch.load(osp.join(work_dir,'runs',run_name,'config.trch'))
+    trainer = config.make()
+    state = trainer.load(name='best.trch')
+
+    # Making directory
+    if not osp.exists(output_dir):
+        os.mkdir(output_dir)
+
+    
+    # Losses
+    print('Plotting Losses')
+    fig, ax = plt.subplots(figsize=(16,5),dpi=200)
+    iled.plotting.plot_losses(trainer.stats)
+    fig.savefig(osp.join(output_dir,'losses.png'),dpi=200,bbox_inches='tight')
+
+    # Data
+    print('Instantiating Dataset')
+    test_dataset = iled.data_utils.FHNDataset(osp.join(work_dir,'data'),'test')
+    traj = test_dataset[np.random.choice(len(test_dataset))]
+    horizon = 8000
+
+    # Encoded Plot
+    print('Plotting Encoding')
+    encoded_plot(traj,trainer,Tvis=min(horizon,400),Tf=horizon,save_path=output_dir)
+
+    # Prediction & Dynamics Norm Plots
+    print('Plotting Predictions')
+    prediction_plot(traj,trainer,Tvis=min(horizon,400),Tf=horizon,save_path=output_dir)
+
+
+

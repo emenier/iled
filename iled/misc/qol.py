@@ -11,4 +11,6 @@ def to_numpy(x):
 
 def to_tensor(x):
     dev = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-    return torch.tensor(x).to(dev, torch.get_default_dtype())
+    if not isinstance(x,torch.Tensor):
+        x = torch.tensor(x) 
+    return x.to(dev, torch.get_default_dtype())
