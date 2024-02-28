@@ -21,7 +21,7 @@ or `pip3 install -e .` if you intend to contribute.
 
 ## Training a model
 
-A model for the Fitz-Hugh Nagomo case can be trained with as follows:
+A model for the Fitz-Hugh Nagomo case can be trained as follows:
 
 ```
 python examples/FHN/trainscript.py --work_dir /path/to/work/dir --run_name my_run
