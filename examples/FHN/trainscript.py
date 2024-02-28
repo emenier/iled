@@ -2,8 +2,6 @@ import argparse
 import os.path as osp
 from torch.utils.data import DataLoader
 import sys
-
-sys.path.append("/home/tau/emenier/workspace/iLED_public/")
 import torch
 import torch.nn as nn
 import numpy as np
