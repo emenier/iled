@@ -171,7 +171,7 @@ def encoded_plot(traj, trainer, Tvis=None, Tf=None, save_path = None, ticks=Fals
 
     matplotlib.rcParams.update({"font.size": 10})
     fig = plt.figure(figsize=(16, 4), constrained_layout=True)
-    gs = gridspec.GridSpec(2, 11, hspace=0.05, wspace=0.5,figure=fig)
+    gs = gridspec.GridSpec(2, 11, hspace=0.05, wspace=0.25,figure=fig)
 
     w_1 = 8
     pad = 0.01

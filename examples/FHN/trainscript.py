@@ -61,7 +61,7 @@ dynamics_config = iled.splitdynamics.SplitDynamicsConfig(
     dim_latent=2,
     dim_hidden=16,
     activation=nn.SiLU(),
-    linear_operator="conservative",
+    linear_operator="unconstrained",
     nl_operator="unconstrained",
     nl_width=32,
     default_substeps=1,
@@ -83,7 +83,7 @@ losses_and_scales = {
     "reconstruction": ["mse", 1],
     "latent_forecast": ["mse", 1e-1],
     #"reconstructed_forecast": ["mse", 1e-2],
-    "nl_penalisation": ["norm_loss", 1e-5],
+    "nl_penalisation": ["norm_loss", 1e-4],
     #'latent_center': ['centering_loss',1e-1]
 }
 
@@ -97,7 +97,7 @@ trainer_config = iled.trainer.TrainerConfig(
     weight_decay=1e-6,
     max_patience=200,
     t_increment_patience=10,
-    nT_increment=1,
+    nT_increment=5,
     target_length=120,
     cuda=torch.cuda.is_available(),
     validate_every=1,
