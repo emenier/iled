@@ -1,6 +1,6 @@
 # iLED
 
-This is a package giving an example of the iLED method
+This is package provides a minimal example for the iled modeling approach.
 
 ## Installation
 
