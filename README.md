@@ -4,13 +4,20 @@ This is package provides a minimal example for the iled modeling approach.
 
 ## Installation
 
-The package can be installed through the following command:
+The package can be installed by first cloning the repository:
 
 ```
+git clone git@github.com:emenier/iled.git
+```
+
+Then installing through the following command:
+
+```
+cd iled
 pip3 install -U .
 ```
 
-or `pip3 install -e .` to contribute.
+or `pip3 install -e .` if you intend to contribute.
 
 ## Training a model
 
