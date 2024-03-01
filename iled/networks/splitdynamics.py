@@ -195,10 +195,8 @@ class LinearRoot(OperatorRoot):
 
     def non_decayable_parameters(self):
         return self.parameters()
-        #return []
 
     def decayable_parameters(self):
-        #return self.parameters()
         return []
 
 

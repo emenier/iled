@@ -19,7 +19,7 @@ pip3 install -U .
 
 or `pip3 install -e .` if you intend to contribute.
 
-## Training a model
+## Training a model for the FHN case
 
 A model for the Fitz-Hugh Nagomo case can be trained as follows:
 
