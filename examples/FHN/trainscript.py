@@ -81,7 +81,7 @@ end_to_end_config = iled.endtoend.EndToEndConfig(
 #### Trainer ####
 losses_and_scales = {
     "reconstruction": ["mse", 1],
-    "latent_forecast": ["mse", 1e-1],
+    "latent_forecast": ["mse", 1],
     #"reconstructed_forecast": ["mse", 1e-2],
     "nl_penalisation": ["norm_loss", 1e-4],
     #'latent_center': ['centering_loss',1e-1]
@@ -96,14 +96,13 @@ trainer_config = iled.trainer.TrainerConfig(
     lr=1e-4,
     weight_decay=1e-6,
     max_patience=200,
-    t_increment_patience=10,
+    t_increment_patience=25,
     nT_increment=5,
     target_length=120,
     cuda=torch.cuda.is_available(),
     validate_every=1,
     checkpoint_every=10,
-    lr_reduction_order = 2,
-    loss_threshold = 5e-5
+    lr_reduction_order = 2
 )
 
 #### Instantiation and training ####
