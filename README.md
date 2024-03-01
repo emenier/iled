@@ -2,7 +2,7 @@
 
 This package provides an implementation of the iled modeling approach.
 
-Menier, E., Kaltenbach, S., Yagoubi, M., Schoenauer, M., & Koumoutsakos, P. (2023). <em>Interpretable Learning of Effective Dynamics for multiscale systems<\em>. [arXiv](https://arxiv.org/abs/2309.05812).
+Menier, E., Kaltenbach, S., Yagoubi, M., Schoenauer, M., & Koumoutsakos, P. (2023). <em>Interpretable Learning of Effective Dynamics for multiscale systems</em>. [arXiv](https://arxiv.org/abs/2309.05812).
 
 ## Installation
 
