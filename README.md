@@ -13,7 +13,6 @@ git clone git@github.com:emenier/iled.git
 Then installing through the following command:
 
 ```
-cd iled
 pip3 install -U .
 ```
 
